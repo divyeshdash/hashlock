@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASH LOCK — Password & File Integrity Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+    <div class="header-inner">
+        <div class="logo">
+            <span class="logo-icon">🔐</span>
+            <span class="logo-text">HASH <strong>LOCK</strong></span>
+            <span class="badge">Security Tool</span>
+        </div>
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-target="password">Password Analyzer</button>
+            <button class="nav-tab" data-target="hasher">File Hash Generator</button>
+            <button class="nav-tab" data-target="verify">File Integrity Verifier</button>
+        </nav>
+        <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">◐</button>
+    </div>
+</header>
+
+<main class="main-content">
+
+    <!-- HERO BANNER -->
+    <section class="hero">
+        <div class="hero-text">
+            <p class="hero-eyebrow">Personal Cybersecurity Project</p>
+            <h1>PASSWORD SECURITY AND FILE INTEGRITY ANALYZER</h1>
+            <p class="hero-sub">Strengthen your defenses, verify your files, and protect what matters.</p>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         MODULE 1: PASSWORD STRENGTH ANALYZER
+    ═══════════════════════════════════════════ -->
+    <section class="module active" id="module-password">
+        <div class="module-header">
+            <div>
+                <h2>Password Strength Analyzer</h2>
+                <p>Evaluate password robustness using length, character diversity, and pattern detection.</p>
+            </div>
+        </div>
+
+        <div class="module-body two-col">
+            <div class="input-panel">
+                <label class="field-label">Enter Password</label>
+                <div class="password-field-wrap">
+                    <input type="password" id="passwordInput" class="mono-input" placeholder="Type your password..." autocomplete="off">
+                    <button class="toggle-vis" id="toggleVis" title="Show/hide">👁</button>
+                    <button class="toggle-vis" id="copyPwdBtn" title="Copy password">📋</button>
+                </div>
+
+                <div class="strength-bar-wrap">
+                    <div class="strength-bar" id="strengthBar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <span class="strength-label" id="strengthLabel">—</span>
+                </div>
+
+                <div class="checklist" id="checklist">
+                    <div class="check-item" id="check-length"><span class="check-icon">○</span> Min 8 characters</div>
+                    <div class="check-item" id="check-uppercase"><span class="check-icon">○</span> Uppercase letter</div>
+                    <div class="check-item" id="check-lowercase"><span class="check-icon">○</span> Lowercase letter</div>
+                    <div class="check-item" id="check-number"><span class="check-icon">○</span> Number (0–9)</div>
+                    <div class="check-item" id="check-special"><span class="check-icon">○</span> Special character</div>
+                    <div class="check-item" id="check-no_common"><span class="check-icon">○</span> No common patterns</div>
+                </div>
+
+                <div class="gen-section">
+                    <label class="field-label">Generate Strong Password</label>
+                    <div class="gen-row">
+                        <input type="range" id="pwdLength" min="8" max="32" value="16" class="range-input">
+                        <span id="pwdLengthVal" class="mono-badge">16 chars</span>
+                    </div>
+                    <button class="btn btn-primary" id="generateBtn">⚡ Generate Password</button>
+                </div>
+            </div>
+
+            <div class="result-panel" id="passwordResult">
+                <div class="result-placeholder">
+                    <span class="placeholder-icon">🔐</span>
+                    <p>Start typing a password to see real-time analysis</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         MODULE 2: FILE HASH GENERATOR
+    ═══════════════════════════════════════════ -->
+    <section class="module" id="module-hasher">
+        <div class="module-header">
+            <div>
+                <h2>File Hash Generator</h2>
+                <p>Upload any file to generate its MD5, SHA-1, and SHA-256 cryptographic fingerprints.</p>
+            </div>
+        </div>
+
+        <div class="module-body">
+            <div class="drop-zone" id="hashDropZone">
+                <div class="drop-icon">📁</div>
+                <p>Drop a file here or <label class="file-link" for="hashFileInput">browse</label></p>
+                <span class="drop-hint">Any file type · Max 16 MB</span>
+                <input type="file" id="hashFileInput" hidden>
+            </div>
+
+            <div class="hash-results hidden" id="hashResults">
+                <div class="file-meta" id="hashFileMeta"></div>
+                <div class="hash-table" id="hashTable"></div>
+                <button class="btn btn-ghost" id="copyAllHashes">📋 Copy All Hashes</button>
+                <button class="btn btn-ghost" id="exportHashPdf">📄 Export PDF</button>
+                <button class="btn btn-ghost" id="clearHash">✕ Clear</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         MODULE 3: FILE INTEGRITY VERIFIER
+    ═══════════════════════════════════════════ -->
+    <section class="module" id="module-verify">
+        <div class="module-header">
+            <div>
+                <h2>File Integrity Verifier</h2>
+                <p>Compare a file's computed hash against an expected value to detect tampering or corruption.</p>
+            </div>
+        </div>
+
+        <div class="module-body">
+            <div class="verify-grid">
+                <div class="verify-input-col">
+                    <div class="drop-zone small" id="verifyDropZone">
+                        <div class="drop-icon">🔍</div>
+                        <p>Drop file or <label class="file-link" for="verifyFileInput">browse</label></p>
+                        <input type="file" id="verifyFileInput" hidden>
+                    </div>
+
+                    <label class="field-label" style="margin-top:1.5rem">Algorithm</label>
+                    <div class="algo-selector">
+                        <label class="algo-btn"><input type="radio" name="hashType" value="md5"> MD5</label>
+                        <label class="algo-btn"><input type="radio" name="hashType" value="sha1"> SHA-1</label>
+                        <label class="algo-btn active"><input type="radio" name="hashType" value="sha256" checked> SHA-256</label>
+                    </div>
+
+                    <label class="field-label" style="margin-top:1rem">Expected Hash</label>
+                    <textarea id="expectedHash" class="mono-input textarea" placeholder="Paste expected hash here..."></textarea>
+
+                    <button class="btn btn-primary" id="verifyBtn" style="margin-top:1rem">🔎 Verify Integrity</button>
+                </div>
+
+                <div class="verify-result-col" id="verifyResult">
+                    <div class="result-placeholder">
+                        <span class="placeholder-icon">🛡️</span>
+                        <p>Upload a file and enter the expected hash to verify</p>
+                    </div>
+                    <div id="verifyExportContainer" style="display:none; margin-top:1rem;">
+                        <button class="btn btn-ghost" id="exportIntegrityPdf">📄 Export PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <p>HASH LOCK · Built for password security and file integrity awareness</p>
+    <p class="footer-tech">Python · Flask · Hashing · Cybersecurity</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
