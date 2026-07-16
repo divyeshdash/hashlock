@@ -108,7 +108,15 @@ hashlock/
 
 ## Why I built this
 
-I was tired of switching between online tools for each of these tasks — and most of them send your data to a server you don't control. This runs entirely on your own machine. The password never leaves your browser's JavaScript, and files are hashed server-side in memory without being saved to disk.
+I was tired of switching between online tools for each of these tasks — and most of them send your data to a server you don't control. This runs entirely on your own machine. Passwords are sent to the server for strength analysis (over HTTPS) and are never stored or logged — analysis happens in memory and the password is discarded after the response. Files are hashed server-side in memory without being saved to disk.
+
+---
+
+## Security Notes
+
+- Password analysis requests are sent over HTTPS; passwords are processed in memory and never logged or persisted.
+- MD5 and SHA-1 are provided for legacy compatibility (e.g. verifying old published hashes) — SHA-256 is recommended for integrity verification.
+- This app is a learning/utility project and has not undergone a formal security audit.
 
 ---
 
